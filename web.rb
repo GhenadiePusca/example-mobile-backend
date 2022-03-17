@@ -212,7 +212,6 @@ end
 # https://stripe.com/docs/api/payment_intents/create
 # A real implementation would include controls to prevent misuse
 post '/create_payment_intent' do
-  authenticate!
   payload = params
 
   if request.content_type != nil and request.content_type.include? 'application/json' and params.empty?
@@ -228,7 +227,7 @@ post '/create_payment_intent' do
     payment_intent = Stripe::PaymentIntent.create(
       :amount => amount,
       :currency => currency_for_country(payload[:country]),
-      :customer => payload[:customer_id] || @customer.id,
+      :customer => payload[:customer_id] || "cus_LKtBOVzkEmpNan",
       :description => "Example PaymentIntent",
       :capture_method => ENV['CAPTURE_METHOD'] == "manual" ? "manual" : "automatic",
       payment_method_types: supported_payment_methods ? supported_payment_methods : payment_methods_for_country(payload[:country]),
@@ -259,7 +258,6 @@ end
 # https://stripe.com/docs/api/payment_intents/confirm
 # A real implementation would include controls to prevent misuse
 post '/confirm_payment_intent' do
-  authenticate!
   payload = params
   if request.content_type.include? 'application/json' and params.empty?
     payload = Sinatra::IndifferentHash[JSON.parse(request.body.read)]
@@ -277,7 +275,7 @@ post '/confirm_payment_intent' do
       payment_intent = Stripe::PaymentIntent.create(
         :amount => amount,
         :currency => currency_for_country(payload[:country]),
-        :customer => payload[:customer_id] || @customer.id,
+        :customer => payload[:customer_id] || "cus_LKtBOVzkEmpNan",
         :source => payload[:source],
         :payment_method => payload[:payment_method_id],
         :payment_method_types => payment_methods_for_country(payload[:country]),
