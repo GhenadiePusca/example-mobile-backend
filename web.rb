@@ -7,7 +7,7 @@ require 'encrypted_cookie'
 $stdout.sync = true # Get puts to show up in heroku logs
 
 Dotenv.load
-Stripe.api_key = ENV['STRIPE_TEST_SECRET_KEY']
+Stripe.api_key = "sk_test_51KeCGfGF9hLuvlPOqUbYpNFoMopuoaybyubrrH35hJE0xiocoGaCSYJitfkmZjPsWSXNZ30pmaTyAufKSSrjhEyd00qN9cGYil"
 
 use Rack::Session::EncryptedCookie,
   :secret => 'replace_me_with_a_real_secret_key' # Actually use something secret here!
@@ -23,7 +23,7 @@ get '/' do
 end
 
 post '/ephemeral_keys' do
-  return log_info("api_key #{ENV['STRIPE_TEST_SECRET_KEY']}")
+  return log_info("api_key #{Stripe.api_key}")
   return authenticate
   begin
     key = Stripe::EphemeralKey.create(
