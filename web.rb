@@ -23,7 +23,7 @@ get '/' do
 end
 
 post '/ephemeral_keys' do
-  return authenticate
+  authenticate
   begin
     key = Stripe::EphemeralKey.create(
       {customer: @customer.id},
@@ -44,6 +44,7 @@ def authenticate
   # Your own logic will likely look very different.
   return @customer if @customer
   if session.has_key?(:customer_id)
+    return log_info("Session has key")
     customer_id = session[:customer_id]
     begin
       @customer = Stripe::Customer.retrieve(customer_id)
@@ -51,6 +52,7 @@ def authenticate
     end
   else
     default_customer_id = ENV['DEFAULT_CUSTOMER_ID']
+    return log_info("customer id #{default_customer_id}")
     if default_customer_id
       @customer = Stripe::Customer.retrieve(default_customer_id)
     else
