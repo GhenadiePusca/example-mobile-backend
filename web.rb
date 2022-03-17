@@ -52,12 +52,12 @@ def authenticate
     end
   else
     default_customer_id = ENV['DEFAULT_CUSTOMER_ID']
-    return log_info("customer id #{default_customer_id}")
     if default_customer_id
       @customer = Stripe::Customer.retrieve(default_customer_id)
     else
       begin
         @customer = create_customer()
+        return log_info("customer created")
 
         if (Stripe.api_key.start_with?('sk_test_'))
           # only attach test cards in testmode
