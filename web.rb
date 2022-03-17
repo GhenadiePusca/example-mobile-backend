@@ -23,10 +23,9 @@ get '/' do
 end
 
 post '/ephemeral_keys' do
-  authenticate
   begin
     key = Stripe::EphemeralKey.create(
-      {customer: @customer.id},
+      {customer: "cus_LKtBOVzkEmpNan"},
       {stripe_version: params["api_version"]}
     )
   rescue Stripe::StripeError => e
