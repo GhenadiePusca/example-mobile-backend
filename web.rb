@@ -23,6 +23,7 @@ get '/' do
 end
 
 post '/ephemeral_keys' do
+  return log_info("api_key #{ENV['STRIPE_TEST_SECRET_KEY']}")
   return authenticate
   begin
     key = Stripe::EphemeralKey.create(
