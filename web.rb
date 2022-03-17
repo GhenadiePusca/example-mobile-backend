@@ -23,6 +23,8 @@ get '/' do
 end
 
 post '/ephemeral_keys' do
+  status 200
+  return log_info("Before Auth")
   authenticate!
   status 200
   return log_info("Authenticated")
