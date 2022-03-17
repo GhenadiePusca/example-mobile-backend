@@ -23,11 +23,7 @@ get '/' do
 end
 
 post '/ephemeral_keys' do
-  status 200
-  return log_info("Before Auth")
-  authenticate!
-  status 200
-  return log_info("Authenticated")
+  return authenticate
   begin
     key = Stripe::EphemeralKey.create(
       {customer: @customer.id},
@@ -43,7 +39,7 @@ post '/ephemeral_keys' do
   key.to_json
 end
 
-def authenticate!
+def authenticate
   # This code simulates "loading the Stripe customer for your current session".
   # Your own logic will likely look very different.
   return @customer if @customer
