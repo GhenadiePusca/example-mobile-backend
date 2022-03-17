@@ -56,7 +56,7 @@ def authenticate
       @customer = Stripe::Customer.retrieve(default_customer_id)
     else
       begin
-        return log_info("customer created #{create_customer()}")
+        return create_customer()
         @customer = create_customer()
 
         if (Stripe.api_key.start_with?('sk_test_'))
@@ -72,13 +72,17 @@ def authenticate
 end
 
 def create_customer
-  Stripe::Customer.create(
-    :description => 'mobile SDK example customer',
-    :metadata => {
-      # Add our application's customer id for this Customer, so it'll be easier to look up
-      :my_customer_id => '72F8C533-FCD5-47A6-A45B-3956CA8C792D',
-    },
-  )
+  begin
+    Stripe::Customer.create(
+      :description => 'mobile SDK example customer',
+      :metadata => {
+        # Add our application's customer id for this Customer, so it'll be easier to look up
+        :my_customer_id => '72F8C533-FCD5-47A6-A45B-3956CA8C792D',
+      },
+    )
+  rescue Stripe::StripeError => e
+    return log_info("Error creating customer: #{e.message}")
+  end
 end
 
 def attach_customer_test_cards
