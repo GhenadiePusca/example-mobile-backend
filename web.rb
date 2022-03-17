@@ -24,6 +24,8 @@ end
 
 post '/ephemeral_keys' do
   authenticate!
+  status 200
+  return log_info("Authenticated")
   begin
     key = Stripe::EphemeralKey.create(
       {customer: @customer.id},
