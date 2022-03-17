@@ -23,8 +23,7 @@ get '/' do
 end
 
 post '/ephemeral_keys' do
-  return log_info("api_key #{Stripe.api_key}")
-  return authenticate
+  authenticate
   begin
     key = Stripe::EphemeralKey.create(
       {customer: @customer.id},
@@ -57,9 +56,7 @@ def authenticate
       @customer = Stripe::Customer.retrieve(default_customer_id)
     else
       begin
-        return create_customer()
         @customer = create_customer()
-
         if (Stripe.api_key.start_with?('sk_test_'))
           # only attach test cards in testmode
           attach_customer_test_cards()
